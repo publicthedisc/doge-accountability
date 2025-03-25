@@ -1,10 +1,47 @@
 <html lang="en">
 <head>
+    <!-- 
+    Must display all contracts in an expandable list, each object in the list is expandable for more info
+    Pie charts displaying stats comparing cut contracts to all contracts
+    Navbar at the top
+    Potential search feature
+    -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Doge Accountability</title>
+    <link rel="stylesheet" href="main.css">
+    <script src="main.js"></script>
 </head>
 <body>
-    <h1>Test Page</h1>
+    <header>    
+        <h1>DOGE Accountability</h1>
+        <h2 style="color: red; margin-left: auto; margin-right: auto;">Living the meme</h2>
+    </header>
+    <div id="main-dashboard">
+        <!-- Potentially add cards here-->
+        <img src="https://uploads.dailydot.com/2025/02/become_meme_musk_cpac.jpg?q=65&auto=format&w=1600&ar=2:1&fit=crop" alt="I am become meme">
+    </div>
+    <table id="main-table">
+        <thead>
+            <tr>
+                <th>Agency Name</th>
+                <th>Description</th>
+                <th>Doge Savings</th>
+                <th>Link</th>
+                <th>More</th>
+            </tr>
+        </thead>
+        <tbody id="cancellation-table-body">      
+            
+            <!-- Add all the data in here -->
+        </tbody>
+        <tfoot>
+            <tr id="cancellation-table-foot" onclick="loadMoreData()">
+                <td colspan="5">
+                    <button>Click to See More</button>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
 </body>
 </html>
