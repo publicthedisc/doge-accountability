@@ -21,6 +21,17 @@
         <!-- Potentially add cards here-->
         <img src="https://uploads.dailydot.com/2025/02/become_meme_musk_cpac.jpg?q=65&auto=format&w=1600&ar=2:1&fit=crop" alt="I am become meme">
     </div>
+    <search id="cancellation-table-search">
+        <input id="cancellation-search-input" type="text" placeholder="Search for a contract" autocomplete="off">
+        <button class="search-button" onclick="searchCancellations()">SEARCH</button>
+        <div id="cancellation-search-parameters">
+            <button class="parameter-button parameter-button-active" onclick="toggleCancellationParameter(event)" value="description">Description</button>
+            <button class="parameter-button" onclick="toggleCancellationParameter(event)" value="ai_description">Ai Description</button>
+            <button class="parameter-button" onclick="toggleCancellationParameter(event)" value="product_description">Product Description</button>
+            <button class="parameter-button" onclick="toggleCancellationParameter(event)" value="business_name">Business Name</button>
+            <button class="parameter-button" onclick="toggleCancellationParameter(event)" value="agency_name">Agency Name</button>
+        </div>
+    </search>
     <table id="main-table">
         <thead>
             <tr>
@@ -31,14 +42,13 @@
                 <th>More</th>
             </tr>
         </thead>
-        <tbody id="cancellation-table-body">      
-            
+        <tbody id="cancellation-table-body">       
             <!-- Add all the data in here -->
         </tbody>
         <tfoot>
-            <tr id="cancellation-table-foot" onclick="loadMoreData()">
+            <tr id="cancellation-table-foot" >
                 <td colspan="5">
-                    <button>Click to See More</button>
+                    <button id="load-more-button" onclick="loadMoreData()">Click to See More</button>
                 </td>
             </tr>
         </tfoot>
