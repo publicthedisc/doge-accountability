@@ -1,25 +1,78 @@
 <html lang="en">
 <head>
     <!-- 
-    Must display all contracts in an expandable list, each object in the list is expandable for more info
-    Pie charts displaying stats comparing cut contracts to all contracts
+    Pie charts displaying stats comparing contracts
     Navbar at the top
-    Potential search feature
     -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Doge Accountability</title>
     <link rel="stylesheet" href="main.css">
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="main.js"></script>
+    <script src="d3-logic.js"></script>
 </head>
 <body>
+    <div id="tooltip"></div>
+
     <header>    
         <h1>DOGE Accountability</h1>
         <h2 style="color: red; margin-left: auto; margin-right: auto;">Living the meme</h2>
     </header>
     <div id="main-dashboard">
-        <!-- Potentially add cards here-->
-        <img src="https://uploads.dailydot.com/2025/02/become_meme_musk_cpac.jpg?q=65&auto=format&w=1600&ar=2:1&fit=crop" alt="I am become meme">
+        <button class="dashboard-button left-button"><</button>
+        <div id="dashboard-mask">
+            <div id="dashboard-screen">
+                <div class="dashboard-card">   
+                    <h1 class="chart-title">Business Size</h1>     
+                    <div id="business-size-pie-chart" class="pie-chart-container"></div>
+                </div>
+                <div class="dashboard-card">        
+                    <div class="info-container">
+                        <h1>Reported DOGE savings</h1>
+                        <h2>~$28,000,000,000.00</h2>
+                        <h1>Actual DOGE savings*</h1>
+                        <h2 id="actual-doge-savings-container"></h2>
+                        <h3 class="info-disclaimer">*Contracts with verifiable sources</h3>
+                    </div>
+                </div>
+                <div class="dashboard-card">      
+                    <h1 class="chart-title">Contract Value</h1>    
+                    <div id="contract-value-pie-chart" class="pie-chart-container"></div>
+                </div>
+                <div class="dashboard-card">       
+                    <h1 class="chart-title">Veteran Ownership</h1>   
+                    <div id="veteran-owned-pie-chart" class="pie-chart-container"></div>
+                </div>  
+                <div class="dashboard-card">        
+                    <h1 class="chart-title">Women Ownership</h1>  
+                    <div id="women-owned-pie-chart" class="pie-chart-container"></div>
+                </div>
+                <div class="dashboard-card">      
+                    <h1 class="chart-title">Business Type</h1>    
+                    <div id="business-type-pie-chart" class="pie-chart-container"></div>
+                </div>
+                <div class="dashboard-card">   
+                    <h1 class="chart-title">Contract Pricing</h1>       
+                    <div id="contract-pricing-pie-chart" class="pie-chart-container"></div>
+                </div>
+                <div class="dashboard-card">       
+                    <h1 class="chart-title">Contract Type</h1>   
+                    <div id="contract-type-pie-chart" class="pie-chart-container"></div>
+                </div>  
+                <div class="dashboard-card">        
+                    <h1 class="chart-title">Offers Received</h1>  
+                    <div id="offers-received-pie-chart" class="pie-chart-container"></div>
+                </div>
+                <div class="dashboard-card">        
+                    <div class="info-container">
+                        <h1>I am become <br><br><br><strong><i><span style="color : pink;">meme</span></i></strong></h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="dashboard-button right-button">></button>
     </div>
     <search id="cancellation-table-search">
         <input id="cancellation-search-input" type="text" placeholder="Search for a contract" autocomplete="off">

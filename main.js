@@ -1,3 +1,6 @@
+// TODO Various contracts which are totally nulled need to be fixed
+// TODO add sort by feature
+
 initialize();
 
 function initialize(){
@@ -32,7 +35,16 @@ function toggleMoreInfo(event) {
     button.classList.toggle('rotate-180');
 }
 function formatNumber(numberToFormat){
+    if (numberToFormat == null) return null
+
     return numberToFormat.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+function toTitleCase(str){
+    return str
+        .toLowerCase()
+        .split(" ")
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ")
 }
 function loadMoreData() {
     fetch("data.txt")
@@ -41,10 +53,11 @@ function loadMoreData() {
         const tableBody = document.getElementById("cancellation-table-body");
 
         for(let i = currentVisibleCancellationIndex; i < currentVisibleCancellationIndex + cancellationLoadAmount; i++){
-            if(cancellationIdsToLoad[i] == null){
+            const currentId = cancellationIdsToLoad[i];
+
+            if(currentId == null || data[currentId].amount_spent == null){
                 continue;
             }
-            const currentId = cancellationIdsToLoad[i];
 
             const newHTML = `
            <tr>
@@ -127,6 +140,7 @@ function loadMoreData() {
             document.getElementById("load-more-button").innerText = "No More Cancellations Left";
             document.getElementById("load-more-button").style.pointerEvents = "none";
         } else{
+            console.log(currentVisibleCancellationIndex + " " + cancellationIdsToLoad.length)
             document.getElementById("load-more-button").innerText = "Load More Cancellations"; 
             document.getElementById("load-more-button").style.pointerEvents = "auto";
         }
@@ -157,7 +171,7 @@ function getFormattedData(data) {
     if (result.length === 0) {
         return `<li class="minority-data-list">None</li>`
     }
-    
+
     return result.join('');
 }
 function searchCancellations(){
@@ -201,3 +215,146 @@ function toggleArrayValue(arr, value) {
         arr.splice(index, 1);
     }
 }
+
+document.addEventListener('DOMContentLoaded', async function() {
+    await loadData();
+
+    // make a clone of the cards on the left and right
+    // then after arrow is clicked add next one and remove old one
+
+    const scrollLeftBtn = document.querySelector('.left-button');
+    const scrollRightBtn = document.querySelector('.right-button');
+    const cardContainer = document.getElementById('dashboard-screen');
+    const cards = document.querySelectorAll('.dashboard-card');
+    let currentIndex = 0;
+    let offsetIndex = 0;
+    const cardsToShow = 1;
+    const shownCards = 3;
+
+    let resetTimer;
+
+    cardContainer.innerHTML = '';
+    for (let i = 0; i < shownCards; i++) {
+        cardContainer.append(cards[i])
+    }
+
+    function updateCarousel() {
+        const transformValue = -offsetIndex * (34 * cardsToShow);
+        cardContainer.style.transform = `translateX(${transformValue}%)`;
+    }
+
+    scrollRightBtn.addEventListener('click', () => {
+        clearTimeout(resetTimer);
+        offsetIndex++;
+        cardContainer.style.transition = "transform 0.5s ease";
+
+        // Append a copy of the card
+        for (let i = 0; i < cardsToShow; i++) {
+            currentIndex++;
+            currentIndex %= cards.length;
+            cardContainer.append(cards[wrapIndex(currentIndex + shownCards - 1, cards.length)].cloneNode(true))
+        }
+        updateCarousel();
+
+        // Cleanup
+        resetTimer = setTimeout(() => {
+            offsetIndex = 0;
+            cardContainer.style.transition = "none";
+            cardContainer.innerHTML = '';
+            for (let i = 0; i < shownCards; i++) {
+                cardContainer.append(cards[wrapIndex(currentIndex + i, cards.length)])
+            }
+            cardContainer.style.transform = `translateX(0)`;
+        }, 500);
+    });
+
+    scrollLeftBtn.addEventListener('click', () => {
+        clearTimeout(resetTimer);
+        offsetIndex = 1;
+    
+        // Prepend clones of the previous cards.
+        for (let i = 0; i < cardsToShow; i++) {
+            currentIndex = (currentIndex - 1 + cards.length) % cards.length;
+            cardContainer.prepend(cards[wrapIndex(currentIndex, cards.length)].cloneNode(true));
+        }
+        
+        // Shift container to hide the clones.
+        cardContainer.style.transition = "none";
+        updateCarousel();
+        void cardContainer.offsetWidth;
+        
+        // Animate the container back into place.
+        cardContainer.style.transition = "transform 0.5s ease";
+        cardContainer.style.transform = "translateX(0)";
+        
+        // Cleanup
+        resetTimer = setTimeout(() => {
+            offsetIndex = 0;
+            cardContainer.style.transition = "none";
+            cardContainer.innerHTML = '';
+            for (let i = 0; i < shownCards; i++) {
+                const index = wrapIndex(currentIndex + i, cards.length);
+                cardContainer.append(cards[index]);
+            }
+        }, 500);
+    });
+    
+});
+function wrapIndex(index, length) {
+    return ((index % length) + length) % length;
+}
+async function loadData() {
+    const response = await fetch("data.txt");
+    const data = await response.json();
+
+    // Now perform all the drawing functions for the charts
+    fillDogeSavingsInfo(data);
+    drawWomenOwnedChart(data);
+    drawVeteranOwnedChart(data);
+    drawBusinessSizeChart(data);
+    drawBusinessTypeChart(data);
+    drawContractPricingChart(data);
+    drawContractValueChart(data);
+    drawOffersReceivedChart(data);
+    drawContractTypeChart(data);
+}
+
+/*
+const scrollLeftBtn = document.querySelector('.left-button');
+    const scrollRightBtn = document.querySelector('.right-button');
+    const cardContainer = document.getElementById('dashboard-screen');
+    const cards = document.querySelectorAll('.dashboard-card');
+    const cardCount = cards.length;
+    let currentIndex = 0;
+    const cardsToShow = 1;
+    const shownCards = 3;
+
+    function updateCarousel() {
+        const transformValue = -currentIndex * (34 / cardsToShow);
+        cardContainer.style.transform = `translateX(${transformValue}%)`;
+    }
+
+    scrollRightBtn.addEventListener('click', () => {
+        currentIndex += cardsToShow;
+        if (currentIndex > cardCount - shownCards) {
+            cardContainer.style.transition = 'none';
+            currentIndex = 0;
+            void cardContainer.offsetWidth;
+            cardContainer.style.transition = 'transform 0.5s ease';
+        }
+        updateCarousel();
+    });
+
+    scrollLeftBtn.addEventListener('click', () => {
+        currentIndex -= cardsToShow;
+        if (currentIndex < 0) {
+            cardContainer.style.transition = 'none';
+            currentIndex = Math.floor((cardCount / cardsToShow) - 3);
+            void cardContainer.offsetWidth;
+            cardContainer.style.transition = 'transform 0.5s ease';
+        }
+        updateCarousel();
+    });
+
+    // Initialize
+    updateCarousel();*/
